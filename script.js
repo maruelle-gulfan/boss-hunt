@@ -19,8 +19,19 @@ const db = getFirestore(app);
 const BOSSES_DOC = doc(db, 'bossHunt', 'state');
 
 // ---------- admin gate (client-side, casual protection only) ----------
-const ADMIN_CODE = ['Tyla777', 'Vanta666', 'Bully888'];        // <-- valid team codes
+// SHA-256 hashes of valid admin codes (codes themselves are NOT in source)
+const ADMIN_HASHES = [
+  'b92eaa754ebc7404b90f6599aeffc312dadede1875049b633b17eb5ec774a33c',
+  'f87501b0614bdfde91d044e0f38f9441a8d64a44814485efe590497fa28c679c',
+  '03d407cc6760400a33fd9f0f8705a7c750194f301282e9847ee8ff1661e9b4a7',
+];
 const ADMIN_KEY  = 'bossHuntAdmin_v1';
+
+async function sha256Hex(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
 function isAdmin() {
   return localStorage.getItem(ADMIN_KEY) === '1';
@@ -45,7 +56,7 @@ const DEFAULT_BOSSES = [
   { id: 'dm',  name: 'DM', location: 'B3',     hours: 6,  killedAt: null, unkillable: false, image: 'images/DAM.png' },
   { id: 'gm2', name: 'GM', location: 'RH',     hours: 6,  killedAt: null, unkillable: false, image: 'images/GM.png' },
   { id: 'da',  name: 'DA', location: 'RH',     hours: 8,  killedAt: null, unkillable: false, image: null },
-  { id: 'bg',  name: 'BG', location: 'RH',     hours: 8,  killedAt: null, unkillable: true,  image: 'images/BG.png' },
+  { id: 'bg',  name: 'BG', location: 'RH',     hours: 8,  killedAt: null, unkillable: false,  image: 'images/BG.png' },
   { id: 'as',  name: 'AS', location: 'RH',     hours: 16, killedAt: null, unkillable: false, image: 'images/AS.png' },
   { id: 'cs',  name: 'CS', location: 'RH',     hours: 16, killedAt: null, unkillable: false, image: 'images/CS.png' },
 ];
@@ -365,14 +376,15 @@ document.getElementById('modal').addEventListener('click', (e) => {
 render();
 setInterval(render, 1000);
 applyAdminUI();
-document.getElementById('unlockBtn').addEventListener('click', () => {
+document.getElementById('unlockBtn').addEventListener('click', async () => {
   if (isAdmin()) {
     setAdmin(false);
     return;
   }
   const code = prompt('Enter admin code to enable editing:');
   if (code === null) return;
-  if (ADMIN_CODE.includes(code)) {
+  const hash = await sha256Hex(code);
+  if (ADMIN_HASHES.includes(hash)) {
     setAdmin(true);
     alert('Editing unlocked on this device.');
   } else {

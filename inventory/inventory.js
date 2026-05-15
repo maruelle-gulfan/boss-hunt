@@ -19,8 +19,19 @@ const db = getFirestore(app);
 const INV_DOC = doc(db, 'inventory', 'state');
 
 // ---------- admin gate ----------
-const ADMIN_CODE = ['Tyla777', 'Vanta666', 'Bully888'];
+// SHA-256 hashes of valid admin codes
+const ADMIN_HASHES = [
+  'b92eaa754ebc7404b90f6599aeffc312dadede1875049b633b17eb5ec774a33c',
+  'f87501b0614bdfde91d044e0f38f9441a8d64a44814485efe590497fa28c679c',
+  '03d407cc6760400a33fd9f0f8705a7c750194f301282e9847ee8ff1661e9b4a7',
+];
 const ADMIN_KEY  = 'bossHuntAdmin_v1'; // shared with boss hunt page
+
+async function sha256Hex(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
 function isAdmin() { return localStorage.getItem(ADMIN_KEY) === '1'; }
 function setAdmin(on) {
@@ -357,11 +368,12 @@ document.getElementById('itemModal').addEventListener('click', (e) => {
   if (e.target.id === 'itemModal') closeModal();
 });
 
-document.getElementById('unlockBtn').addEventListener('click', () => {
+document.getElementById('unlockBtn').addEventListener('click', async () => {
   if (isAdmin()) { setAdmin(false); return; }
   const code = prompt('Enter admin code to enable editing:');
   if (code === null) return;
-  if (ADMIN_CODE.includes(code)) {
+  const hash = await sha256Hex(code);
+  if (ADMIN_HASHES.includes(hash)) {
     setAdmin(true);
     alert('Editing unlocked on this device.');
   } else {
