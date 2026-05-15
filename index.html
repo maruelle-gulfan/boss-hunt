@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Boss Hunt - Respawn Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>A S Y L U M</h1>
+      <h1>BOSS HUNT</h1>
+      <div id="currentDate" class="current-date"></div>
+    </header>
+
+    <div class="toolbar">
+      <button id="addBossBtn" class="btn btn-primary">+ Add Boss</button>
+      <button id="serverUpBtn" class="btn btn-warning">Server Up</button>
+      <button id="resetAllBtn" class="btn btn-danger">Reset All</button>
+      <div class="legend">
+        <span class="dot ready"></span> Ready
+        <span class="dot soon"></span> &lt; 1h
+        <span class="dot wait"></span> Waiting
+        <span class="dot unkillable"></span> Unkillable
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="boss-table">
+        <thead>
+          <tr>
+            <th>IMAGE</th>
+            <th>NAME</th>
+            <th>LAST KILLED</th>
+            <th>LOCATION</th>
+            <th>RESPAWN IN</th>
+            <th>NEXT SPAWN</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody id="bossTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="modalTitle">Add Boss</h2>
+      <form id="bossForm">
+        <label>Image
+          <input type="file" id="bossImage" accept="image/*" />
+          <small>Optional. Stored locally in your browser.</small>
+          <div id="bossImagePreview" class="image-preview"></div>
+          <button type="button" id="removeImageBtn" class="btn btn-sm btn-danger hidden" style="margin-top:6px;">Remove Image</button>
+        </label>
+        <label>Name
+          <input type="text" id="bossName" required maxlength="20" />
+        </label>
+        <label>Location
+          <input type="text" id="bossLocation" required maxlength="30" placeholder="e.g. RH" />
+        </label>
+        <label>Respawn Hours
+          <input type="number" id="bossHours" required min="0" step="0.5" placeholder="e.g. 10" />
+        </label>
+        <label>Last Killed (date & time)
+          <input type="datetime-local" id="bossKilledAt" />
+          <small>Leave blank if unkillable / unknown</small>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" id="bossUnkillable" /> Unkillable
+        </label>
+        <div class="modal-actions">
+          <button type="button" id="cancelBtn" class="btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Server Up Modal -->
+  <div id="serverUpModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Server Up</h2>
+      <p style="color:#8b949e;font-size:0.9rem;margin-bottom:12px;">
+        Set the time the server came back online. All killable bosses will have their
+        respawn timers restarted from this moment.
+      </p>
+      <form id="serverUpForm">
+        <label>Server Up Time
+          <input type="datetime-local" id="serverUpTime" required />
+        </label>
+        <div class="modal-actions">
+          <button type="button" id="serverUpNowBtn" class="btn">Use Now</button>
+          <button type="button" id="serverUpCancelBtn" class="btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
