@@ -18,6 +18,24 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const BOSSES_DOC = doc(db, 'bossHunt', 'state');
 
+// ---------- admin gate (client-side, casual protection only) ----------
+const ADMIN_CODE = ['Tyla777', 'Vanta666', 'Bully888'];        // <-- valid team codes
+const ADMIN_KEY  = 'bossHuntAdmin_v1';
+
+function isAdmin() {
+  return localStorage.getItem(ADMIN_KEY) === '1';
+}
+function setAdmin(on) {
+  if (on) localStorage.setItem(ADMIN_KEY, '1');
+  else localStorage.removeItem(ADMIN_KEY);
+  applyAdminUI();
+}
+function applyAdminUI() {
+  document.body.classList.toggle('admin', isAdmin());
+  const btn = document.getElementById('unlockBtn');
+  if (btn) btn.textContent = isAdmin() ? '🔓 Lock' : '🔒 Unlock';
+}
+
 // Default boss list based on the user's format
 const DEFAULT_BOSSES = [
   { id: 'cj',  name: 'CJ', location: 'PY',     hours: 12, killedAt: null, unkillable: false, image: 'images/CJ.png' },
@@ -346,4 +364,19 @@ document.getElementById('modal').addEventListener('click', (e) => {
 
 render();
 setInterval(render, 1000);
+applyAdminUI();
+document.getElementById('unlockBtn').addEventListener('click', () => {
+  if (isAdmin()) {
+    setAdmin(false);
+    return;
+  }
+  const code = prompt('Enter admin code to enable editing:');
+  if (code === null) return;
+  if (ADMIN_CODE.includes(code)) {
+    setAdmin(true);
+    alert('Editing unlocked on this device.');
+  } else {
+    alert('Wrong code.');
+  }
+});
 initFirestore();

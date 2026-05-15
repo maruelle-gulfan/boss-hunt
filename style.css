@@ -176,6 +176,11 @@ body {
 
 .hidden { display: none; }
 
+/* admin-only controls hidden until unlocked */
+body:not(.admin) .admin-only { display: none !important; }
+body:not(.admin) td.actions { display: none; }
+body:not(.admin) th.actions-col { display: none; }
+
 .countdown {
   font-weight: bold;
   letter-spacing: 1px;

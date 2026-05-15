@@ -15,9 +15,10 @@
     </header>
 
     <div class="toolbar">
-      <button id="addBossBtn" class="btn btn-primary">+ Add Boss</button>
-      <button id="serverUpBtn" class="btn btn-warning">Server Up</button>
-      <button id="resetAllBtn" class="btn btn-danger">Reset All</button>
+      <button id="addBossBtn" class="btn btn-primary admin-only">+ Add Boss</button>
+      <button id="serverUpBtn" class="btn btn-warning admin-only">Server Up</button>
+      <button id="resetAllBtn" class="btn btn-danger admin-only">Reset All</button>
+      <button id="unlockBtn" class="btn" title="Unlock editing">🔒 Unlock</button>
       <div class="legend">
         <span class="dot ready"></span> Ready
         <span class="dot soon"></span> &lt; 1h
@@ -36,7 +37,7 @@
             <th>LOCATION</th>
             <th>RESPAWN IN</th>
             <th>NEXT SPAWN</th>
-            <th>ACTIONS</th>
+            <th class="actions-col">ACTIONS</th>
           </tr>
         </thead>
         <tbody id="bossTableBody"></tbody>
