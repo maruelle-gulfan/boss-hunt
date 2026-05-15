@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Asylum - Inventory</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="inventory.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>A S Y L U M</h1>
+      <h1>INVENTORY</h1>
+      <div class="nav-links">
+        <a href="../index.html">← Boss Hunt</a>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button id="addItemBtn" class="btn btn-primary admin-only">+ Add Item</button>
+      <button id="unlockBtn" class="btn" title="Unlock editing">🔒 Unlock</button>
+      <div class="filters">
+        <label>Filter:
+          <select id="statusFilter">
+            <option value="all">All</option>
+            <option value="available">Available</option>
+            <option value="sold">Sold</option>
+          </select>
+        </label>
+        <label>Search:
+          <input type="text" id="searchInput" placeholder="Item or member..." />
+        </label>
+      </div>
+      <div class="totals">
+        <span>Items: <strong id="totalCount">0</strong></span>
+        <span>Available: <strong id="availableCount">0</strong></span>
+        <span>Sold value: <strong id="soldValue">0</strong></span>
+      </div>
+    </div>
+
+    <div class="earnings-panel">
+      <h3>Member Earnings (from sold items)</h3>
+      <div id="memberEarnings" class="earnings-list"></div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="boss-table">
+        <thead>
+          <tr>
+            <th>IMAGE</th>
+            <th>NAME</th>
+            <th>MEMBERS</th>
+            <th>VALUE</th>
+            <th>STATUS</th>
+            <th>NOTES</th>
+            <th class="actions-col">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody id="itemTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Item Modal -->
+  <div id="itemModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="itemModalTitle">Add Item</h2>
+      <form id="itemForm">
+        <label>Image
+          <input type="file" id="itemImage" accept="image/*" />
+          <small>Optional. Stored as a small image (max 2MB).</small>
+          <div id="itemImagePreview" class="image-preview"></div>
+          <button type="button" id="removeItemImageBtn" class="btn btn-sm btn-danger hidden" style="margin-top:6px;">Remove Image</button>
+        </label>
+        <label>Item Name
+          <input type="text" id="itemName" required maxlength="40" />
+        </label>
+        <label>Members
+          <div id="memberChips" class="chips"></div>
+          <div class="chip-input-row">
+            <input type="text" id="itemMember" maxlength="30" placeholder="Type a name and press Enter" list="memberList" />
+            <button type="button" id="addMemberBtn" class="btn btn-sm">Add</button>
+          </div>
+          <datalist id="memberList"></datalist>
+          <small>Add as many members as you want.</small>
+        </label>
+        <label>Value
+          <input type="number" id="itemValue" min="0" step="1" placeholder="e.g. 1000000" />
+        </label>
+        <label>Status
+          <select id="itemStatus">
+            <option value="available">Available</option>
+            <option value="sold">Sold</option>
+          </select>
+        </label>
+        <label>Notes
+          <textarea id="itemNotes" rows="2" maxlength="200" placeholder="Optional"></textarea>
+        </label>
+        <div class="modal-actions">
+          <button type="button" id="itemCancelBtn" class="btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="inventory.js"></script>
+</body>
+</html>
